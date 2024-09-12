@@ -1,137 +1,133 @@
-// Defining the Contact interface
-interface Contact {
+// Defining the structure of each person in the dataset using an interface
+interface Person {
     name: string;
-    email: string;
-    phoneNumber?: string;
-    company?: string;
+    dateOfBirth: string;
+    children: number;
+    country: string;
+    knowsHowToProgram: boolean;
+  }
+  
+  // Array of objects, each representing a person
+  const people: Person[] = [
+    {
+      name: "Tansy Leed",
+      dateOfBirth: "8/30/1972",
+      children: 2,
+      country: "Philippines",
+      knowsHowToProgram: true,
+    },
+    {
+      name: "Sandy McLafferty",
+      dateOfBirth: "7/3/1974",
+      children: 4,
+      country: "Philippines",
+      knowsHowToProgram: true,
+    },
+    {
+      name: "Nicky Covert",
+      dateOfBirth: "10/31/1978",
+      children: 4,
+      country: "France",
+      knowsHowToProgram: false,
+    },
+    {
+      name: "Kalindi Trundell",
+      dateOfBirth: "7/21/2001",
+      children: 2,
+      country: "Brazil",
+      knowsHowToProgram: true,
+    },
+    {
+      name: "Wilmer Hayball",
+      dateOfBirth: "4/3/2002",
+      children: 5,
+      country: "Japan",
+      knowsHowToProgram: false,
+    },
+  ];
+
+  // Extract the birth year from a date string
+function getYear(dateOfBirth: string): number {
+    return new Date(dateOfBirth).getFullYear();
+  }
+
+  // Function to display the output in the HTML
+function displayOutput(text: string): void {
+    const outputDiv = document.getElementById('output') as HTMLElement;
+    outputDiv.innerHTML = text;
+  }
+  
+  // Compare the first and last person's age
+  function compareAges(): void {
+  const firstPersonAge = getYear(people[0].dateOfBirth);
+  const lastPersonAge = getYear(people[people.length - 1].dateOfBirth);
+  let result = "";
+
+  // Output if the first person is older than the last
+  if (firstPersonAge < lastPersonAge) {
+    result = "The first person is older than the last person.";
+    console.log("The first person is older than the last person.");
+  } else if (firstPersonAge > lastPersonAge) {
+    result = "The last person is older than the first person.";
+    console.log("The last person is older than the first person.");
+  } else {
+    result = "Both people are the same age.";
+    console.log("Both people are the same age.");
+  }
+
+  displayOutput(result);
 }
 
-// The contact list will be an array of Contact objects
-const contactList: Contact[] = [];
+// Compare the number of children between the 2nd and 3rd person
+function compareChildren(): void {
+    const result = (people[1].children === people[2].children) ?
+        "The 2nd and 3rd person have the same number of children." :
+        "The 2nd and 3rd person have a different number of children.";
 
-// The function to add a contact
-function add(contact: Contact): void {
-    const output = document.getElementById('output');
+    displayOutput(result);
+    console.log(result);
+  }
 
-    if (!output) {
-        console.error("Output element not found");
-        return;
-    }
+// Check if both the 1st and 4th person know how to program
+function checkProgrammingSkills(): void {
+    const result = (people[0].knowsHowToProgram && people[3].knowsHowToProgram) ?
+        "Yay! Both the 1st and 4th person know how to program." :
+        "LMGTFY. One or both of them don't know how to program.";
 
-    if (!contact.name || !contact.email) {
-        output.textContent = "Missing fields";
-        console.log("Missing fields");
-        return;
-    }
-
-    const duplicate = contactList.find(c => c.email === contact.email);
-    if (duplicate) {
-        output.textContent = "Duplicate was found";
-        console.log("Duplicate was found");
-        return;
-    }
-
-    contactList.push(contact);
-    output.textContent = `${contact.name} was added`;
-    console.log(`${contact.name} was added`);
-
-    listAll(); // Update DOM (optional)
+    displayOutput(result);
+    console.log(result);
 }
 
-// The function to remove a contact
-function remove(email: string): void {
-    const index = contactList.findIndex(c => c.email === email);
+// Switch statement for the 2nd person's nationality
+function checkNationality(): void {
+    let result = "";
+    switch (people[1].country) {
+        case "Iceland":
+            result = "Hæ";
+            console.log("Hæ");
+            break;
+        case "Spain":
+            result = "Hola";
+            console.log("Hola");
+            break;
+        case "Korea":
+            result = "여보세요";
+            console.log("여보세요");
+            break;
+        default:
+            result = "Hello";
+            console.log("Hello");
+  }
 
-    if (index === -1) {
-        console.log("Contact not found");
-        return;
-    }
-
-    const [removedContact] = contactList.splice(index, 1);
-    console.log(`${removedContact.name} was removed`);
-
-    listAll(); // Update DOM (optional)
+  displayOutput(result);
 }
 
-// The function to edit a contact
-function edit(email: string, newData: Partial<Contact>): void {
-    const contact = contactList.find(c => c.email === email);
+// Ternary operator to check if the 2nd person's name is longer than 5 characters
+function checkNameLength(): void {
+    const result = people[1].name.length > 5 ?
+        "Yes, it's long" :
+        "No, it's short";
 
-    if (!contact) {
-        console.log("Contact not found");
-        return;
-    }
-
-    Object.assign(contact, newData);
-    console.log(`${contact.name} was updated`);
-
-    listAll(); // Update DOM (optional)
+    displayOutput(result);
+    console.log(result);
 }
-
-// The function to get a contact
-function get(email: string): void {
-    const contact = contactList.find(c => c.email === email);
-
-    if (!contact) {
-        console.log("Contact not found");
-        return;
-    }
-
-    console.log(`Name: ${contact.name}`);
-    console.log(`Email: ${contact.email}`);
-    console.log(`Phone number: ${contact.phoneNumber || "N/A"}`);
-    console.log(`Company: ${contact.company || "N/A"}`);
-}
-
-// The function to list all contacts
-function listAll(): void {
-    const contactListElement = document.getElementById('contactList');
-    if (contactListElement) {
-        contactListElement.innerHTML = ''; // Clear the list
-
-        if (contactList.length === 0) {
-            console.log("No contacts available");
-            contactListElement.innerHTML = '<li>No contacts available</li>';
-            return;
-        }
-
-        const contactDetails = contactList.map(c => `${c.name} ${c.email}`).join(", ");
-        console.log(contactDetails);
-
-        // Update the DOM (optional)
-        contactList.forEach(contact => {
-            const li = document.createElement('li');
-            li.textContent = `${contact.name} - ${contact.email}`;
-
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'Remove';
-            removeButton.onclick = () => {
-                remove(contact.email);
-            };
-
-            li.appendChild(removeButton);
-            contactListElement.appendChild(li);
-        });
-    }
-}
-
-// The function to clear the contact list
-function clear(): void {
-    contactList.length = 0;
-    console.log("The contact list was cleared");
-
-    listAll(); // Update DOM (optional)
-}
-
-// Exposing the functions to the global window object to be used in the console
-(window as any).add = add;
-(window as any).remove = remove;
-(window as any).edit = edit;
-(window as any).get = get;
-(window as any).listAll = listAll;
-(window as any).clear = clear;
-
-add({ name: "John Doe", email: "john@example.com" })
-
-// Initial call to listAll to ensure the list is shown in the DOM if required
-listAll();
